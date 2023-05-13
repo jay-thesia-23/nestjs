@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Departments } from './departments.entity';
 
 @Entity()
 export class Courses {
@@ -15,5 +16,11 @@ export class Courses {
   gender: string;
 
   @Column()
-  course: string;
+  courses: string;
+
+  @Column()
+  password: string;
+
+  @ManyToOne(() => Departments, (department) => department.course)
+  department: Departments;
 }

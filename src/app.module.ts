@@ -1,3 +1,4 @@
+import { Courses } from './courses/entities/courses.entity';
 import { dataSourceOption } from './../db/data-source';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';

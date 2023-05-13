@@ -1,15 +1,22 @@
+import { Courses } from './entities/courses.entity';
 import { HttpException, Injectable } from '@nestjs/common';
-import { Http2ServerResponse } from 'http2';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { COURSES } from './courses.mock';
 @Injectable()
 export class CoursesService {
   course = COURSES;
 
+  constructor(
+    @InjectRepository(Courses) private courseRepository: Repository<Courses>,
+  ) {}
   getCourses(): Promise<any> {
     return new Promise((resolve) => {
-      console.log(this.course);
+      const CourseWithdep = this.courseRepository.find({
+        relations: ['department'],
+      });
 
-      resolve(this.course);
+      resolve(CourseWithdep);
     });
   }
 
@@ -27,10 +34,14 @@ export class CoursesService {
   }
 
   addCourse(newCourse): Promise<any> {
-    return new Promise((resolve) => {
-      this.course.push(newCourse);
-      resolve(this.course);
-    });
+    try {
+      const courseadd = this.courseRepository.create(newCourse);
+
+      return this.courseRepository.save(courseadd);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   deleteCourse(courseId): Promise<any> {
